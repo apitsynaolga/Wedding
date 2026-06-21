@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Свадебный квест</title>
+    <style>
+        /* ===== ШРИФТ ===== */
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Press Start 2P', monospace;
+            background: #1a0f1f;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            image-rendering: pixelated;
+            overflow: hidden;
+        }
+
+        #app {
+            width: 100%;
+            max-width: 960px;
+            aspect-ratio: 16 / 10;
+            position: relative;
+            border: 6px solid #cd7542;
+            border-radius: 0px;
+            box-shadow: 0 0 0 4px #543235, 0 20px 60px rgba(0,0,0,0.8);
+            background: #ecd1a4;
+            overflow: hidden;
+        }
+
+        /* ===== ЭКРАН МЕНЮ ===== */
+        #menuScreen {
+            position: absolute;
+            inset: 0;
+            background: #d9b382;
+            background-image: url('data:image/svg+xml;utf8,<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="200" fill="%23d9b382"/><path d="M0 20 Q50 15 100 22 T200 18" stroke="%23c4a074" stroke-width="2" fill="none" opacity="0.5"/><path d="M0 45 Q60 50 120 43 T200 47" stroke="%23c4a074" stroke-width="2" fill="none" opacity="0.4"/><path d="M0 70 Q40 65 90 72 T200 68" stroke="%23c4a074" stroke-width="2" fill="none" opacity="0.5"/><path d="M0 95 Q70 100 130 93 T200 97" stroke="%23c4a074" stroke-width="2" fill="none" opacity="0.4"/><path d="M0 120 Q50 115 100 122 T200 118" stroke="%23c4a074" stroke-width="2" fill="none" opacity="0.5"/><path d="M0 145 Q60 150 120 143 T200 147" stroke="%23c4a074" stroke-width="2" fill="none" opacity="0.4"/><path d="M0 170 Q40 165 90 172 T200 168" stroke="%23c4a074" stroke-width="2" fill="none" opacity="0.5"/></svg>');
+            background-size: 200px 200px;
+            display: grid;
+            grid-template-rows: 1fr 2fr 1fr;
+            align-items: center;
+            justify-items: center;
+            padding: 20px 40px;
+            transition: opacity 0.6s ease;
+            z-index: 10;
+        }
+
+        #menuScreen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* ===== ВЕРХНЯЯ ЧАСТЬ (Фокс) ===== */
+        .menu-top {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ===== СРЕДНЯЯ ЧАСТЬ (Текст + кнопки) ===== */
+        .menu-center {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ===== НИЖНЯЯ ЧАСТЬ (Тишка) ===== */
+        .menu-bottom {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ===== КОТЫ ===== */
+        .cat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+            position: relative;
+        }
+
+        .cat-item:hover {
+            transform: scale(1.05);
+        }
+        .cat-item:active {
+            transform: scale(0.9);
+        }
+
+        .cat-sprite {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            border-radius: 0px;
+            border: 3px solid transparent;
+            padding: 5px;
+        }
+
+        /* Фокс — ширина 200px, высота уменьшена на 25% */
+        #gingerCat .cat-sprite {
+            width: 200px;
+            height: 120px;
+        }
+
+        /* Тишка — ширина 130px, высота уменьшена на 25% */
+        #grayCat .cat-sprite {
+            width: 130px;
+            height: 190px;
+        }
+
+        .cat-item:hover .cat-sprite {
+            border-color: #cd593c;
+            background: rgba(205, 89, 60, 0.05);
+            box-shadow: 0 0 20px rgba(205, 89, 60, 0.1);
+        }
+
+        .cat-sprite img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            image-rendering: pixelated;
+        }
+
+        /* ===== ОБЛАЧКО ===== */
+        .cat-speech {
+            position: absolute;
+            background: #ecd1a4;
+            border: 3px solid #cd7542;
+            padding: 8px 14px;
+            border-radius: 0px;
+            color: #1a0f1f;
+            font-size: 0.55rem;
+            line-height: 1.8;
+            max-width: 220px;
+            min-width: 80px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            box-shadow: inset -2px -2px 0 #79606f, inset 2px 2px 0 #ecd1a4;
+            pointer-events: none;
+            white-space: normal;
+            word-wrap: break-word;
+            z-index: 20;
+        }
+
+        #gingerCat .cat-speech {
+            top: 110%;
+            bottom: auto;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        #gingerCat .cat-speech::after {
+            content: '';
+            position: absolute;
+            top: -14px;
+            bottom: auto;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 7px solid transparent;
+            border-bottom-color: #cd7542;
+            border-top-color: transparent;
+        }
+
+        #grayCat .cat-speech {
+            bottom: 110%;
+            top: auto;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        #grayCat .cat-speech::after {
+            content: '';
+            position: absolute;
+            bottom: -14px;
+            top: auto;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 7px solid transparent;
+            border-top-color: #cd7542;
+            border-bottom-color: transparent;
+        }
+
+        .cat-speech.show {
+            opacity: 1;
+        }
+
+        /* ===== ЛОГОТИП ===== */
+        .pixel-logo {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 3.2rem;
+            color: #543235;
+            text-shadow: 3px 3px 0 #ecd1a4, 5px 5px 0 #cd7542;
+            letter-spacing: 2px;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .pixel-logo small {
+            font-size: 0.9rem;
+            display: block;
+            color: #9b6250;
+            text-shadow: 2px 2px 0 #ecd1a4;
+            margin-top: 8px;
+        }
+
+        .pixel-sub {
+            color: #79606f;
+            font-size: 0.6rem;
+            margin-bottom: 15px;
+        }
+
+        /* ===== КНОПКИ В МЕНЮ ===== */
+        .menu-center .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        /* Кнопки «Начать» и «Как играть» — одинаковой ширины */
+        .menu-center .pixel-btn {
+            flex: 1 1 auto;
+            min-width: 140px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        /* Кнопка звука — круглая, как была */
+        .menu-center .sound-btn {
+            background: #9b6250;
+            border: none;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            color: #ecd1a4;
+            cursor: pointer;
+            box-shadow: inset -4px -4px 0 #543235, inset 4px 4px 0 #ecd1a4;
+            transition: 0.05s linear;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .menu-center .sound-btn:hover {
+            background: #cd593c;
+        }
+
+        .menu-center .sound-btn:active {
+            transform: scale(0.9);
+        }
+
+        /* ===== КНОПКИ ОБЩИЕ ===== */
+        .pixel-btn {
+            font-family: 'Press Start 2P', monospace;
+            background: #cd7542;
+            border: none;
+            padding: 14px 36px;
+            font-size: 0.9rem;
+            color: #ecd1a4;
+            text-shadow: 2px 2px 0 #543235;
+            box-shadow: inset -4px -4px 0 #9b6250, inset 4px 4px 0 #ecd1a4;
+            cursor: pointer;
+            transition: 0.05s linear;
+            margin: 5px;
+            min-width: 140px;
+        }
+
+        .pixel-btn:hover {
+            background: #cd593c;
+            box-shadow: inset -4px -4px 0 #543235, inset 4px 4px 0 #ecd1a4;
+            transform: scale(1.02);
+        }
+        .pixel-btn:active {
+            transform: scale(0.95);
+            box-shadow: inset 4px 4px 0 #9b6250, inset -4px -4px 0 #ecd1a4;
+        }
+
+        /* Выделение текста в окошках */
+        .highlight {
+            color: #cd593c;
+            text-shadow: 2px 2px 0 #9b6250;
+        }
+
+        /* ===== КНОПКИ НА ИГРОВОМ ЭКРАНЕ (УВЕЛИЧЕНЫ ×1.5) ===== */
+        .btn-exit-game {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            z-index: 50;
+            background: #543235;
+            border: none;
+            color: #ecd1a4;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 0.75rem;
+            padding: 15px 24px;
+            box-shadow: inset -3px -3px 0 #1a0f1f, inset 3px 3px 0 #79606f;
+            cursor: pointer;
+            transition: 0.05s;
+        }
+        .btn-exit-game:hover {
+            background: #cd593c;
+        }
+        .btn-exit-game:active {
+            transform: scale(0.9);
+        }
+
+        .btn-time-toggle {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            z-index: 50;
+            background: #543235;
+            border: none;
+            color: #ecd1a4;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 1.05rem;
+            padding: 12px 21px;
+            box-shadow: inset -3px -3px 0 #1a0f1f, inset 3px 3px 0 #79606f;
+            cursor: pointer;
+            transition: 0.05s;
+        }
+        .btn-time-toggle:hover {
+            background: #cd593c;
+        }
+        .btn-time-toggle:active {
+            transform: scale(0.9);
+        }
+
+        .progress-counter {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            z-index: 50;
+            background: #543235;
+            padding: 12px 24px;
+            border: 4px solid #cd7542;
+            color: #ecd1a4;
+            font-size: 0.8rem;
+            box-shadow: inset -3px -3px 0 #1a0f1f, inset 3px 3px 0 #79606f;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .progress-counter.complete {
+            color: #ffd700;
+            border-color: #ffd700;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        /* ===== ИГРОВОЙ ЭКРАН ===== */
+        #gameScreen {
+            position: absolute;
+            inset: 0;
+            background: #90969f;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+        }
+        #gameScreen.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .game-scene {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: #728065;
+            overflow: hidden;
+        }
+
+        .game-scene img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            image-rendering: pixelated;
+            pointer-events: none;
+        }
+
+        /* ===== НЕВИДИМЫЕ ЗОНЫ ===== */
+        .pixel-zone {
+            position: absolute;
+            cursor: zoom-in;
+            border: 2px solid rgba(205, 89, 60, 0);
+            transition: all 0.15s;
+            border-radius: 0px;
+        }
+
+        .pixel-zone:hover {
+            background: rgba(166, 218, 208, 0.15);
+            border-color: rgba(205, 89, 60, 0.5);
+            box-shadow: inset 0 0 20px rgba(205, 89, 60, 0.05);
+        }
+
+        /* ===== МОДАЛЬНОЕ ОКНО ===== */
+        .pixel-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(26, 15, 31, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            backdrop-filter: blur(2px);
+        }
+        .pixel-modal.show {
+            display: flex;
+        }
+
+        .pixel-modal-box {
+            background: #ecd1a4;
+            border: 6px solid #cd7542;
+            box-shadow: 
+                inset -4px -4px 0 #9b6250,
+                inset 4px 4px 0 #f5e6d3,
+                0 0 40px rgba(205, 89, 60, 0.15);
+            border-radius: 0px;
+            padding: 30px 35px;
+            max-width: 460px;
+            width: 90%;
+            animation: pixelPop 0.2s steps(2);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        @keyframes pixelPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .pixel-modal-box h2 {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 1.2rem;
+            color: #543235;
+            text-shadow: 2px 2px 0 #ecd1a4;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .pixel-modal-box p {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 0.7rem;
+            line-height: 1.8;
+            color: #1a0f1f;
+            margin-bottom: 20px;
+            transform: scaleY(1.15);
+            display: inline-block;
+        }
+
+        .pixel-modal-box .pixel-btn {
+            font-size: 0.7rem;
+            padding: 10px 28px;
+            min-width: auto;
+        }
+
+        .pixel-modal-box img {
+            max-width: 100%;
+            border-radius: 0px;
+            margin-bottom: 15px;
+            border: 2px solid #cd7542;
+        }
+
+        /* ===== ФИНАЛЬНАЯ КНОПКА ===== */
+        .btn-final {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            background: #cd593c;
+            font-size: 0.8rem;
+            padding: 16px 40px;
+            box-shadow: 0 0 40px rgba(205, 89, 60, 0.5);
+            animation: pulse 1.5s infinite;
+            display: none;
+            border: 3px solid #ffd700;
+        }
+
+        .btn-final:hover {
+            animation: none;
+            transform: translateX(-50%) scale(1.05);
+            background: #b84a30;
+        }
+
+        @keyframes pulse {
+            0% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.05); }
+            100% { transform: translateX(-50%) scale(1); }
+        }
+
+        /* ===== АДАПТАЦИЯ ===== */
+        @media (max-width: 700px) {
+            .pixel-logo { font-size: 2rem; }
+            .pixel-logo small { font-size: 0.6rem; }
+            .pixel-btn { font-size: 0.6rem; padding: 10px 20px; min-width: 100px; }
+            .pixel-modal-box { padding: 20px; }
+            .pixel-modal-box h2 { font-size: 0.9rem; }
+            .pixel-modal-box p { font-size: 0.6rem; }
+            
+            .menu-center .pixel-btn {
+                min-width: 100px;
+                font-size: 0.6rem;
+                white-space: normal;
+            }
+            .menu-center .sound-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+            
+            #gingerCat .cat-sprite {
+                width: 120px;
+                height: 75px;
+            }
+            #grayCat .cat-sprite {
+                width: 90px;
+                height: 75px;
+            }
+            
+            .cat-speech {
+                font-size: 0.45rem;
+                max-width: 140px;
+                min-width: 60px;
+                padding: 5px 10px;
+                white-space: normal;
+            }
+            
+            #gingerCat .cat-speech {
+                top: 105%;
+            }
+            #grayCat .cat-speech {
+                bottom: 105%;
+            }
+            
+            .btn-exit-game {
+                font-size: 0.6rem;
+                padding: 10px 16px;
+            }
+            .btn-time-toggle {
+                font-size: 0.8rem;
+                padding: 8px 14px;
+            }
+            .progress-counter {
+                font-size: 0.6rem;
+                padding: 8px 14px;
+                border-width: 3px;
+            }
+            .btn-final { font-size: 0.6rem; padding: 12px 24px; bottom: 70px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ========================================== -->
+<!--  HTML КОНТЕНТ                              -->
+<!-- ========================================== -->
+<div id="app">
+
+    <!-- ===== МЕНЮ ===== -->
+    <div id="menuScreen">
+
+        <!-- ВЕРХНЯЯ ЧАСТЬ: Фокс (слева) -->
+        <div class="menu-top">
+            <div class="cat-item" id="gingerCat">
+                <div class="cat-speech" id="gingerSpeech">🧡</div>
+                <div class="cat-sprite">
+                    <img src="Fox.png" alt="Фокс">
+                </div>
+            </div>
+        </div>
+
+        <!-- СРЕДНЯЯ ЧАСТЬ: Текст и кнопки (по центру) -->
+        <div class="menu-center">
+            <div class="pixel-logo">
+                ♥ Свадебный<br>квест
+                <small>✦ найди все секреты ✦</small>
+            </div>
+            <div class="pixel-sub">нажми на котов — они заговорят</div>
+
+            <div class="btn-group">
+                <button class="pixel-btn" id="startGameBtn">▶ Начать</button>
+                <button class="sound-btn" id="soundToggleBtn">🔊</button>
+                <button class="pixel-btn" id="howToPlayBtn">❓ Как играть</button>
+            </div>
+        </div>
+
+        <!-- НИЖНЯЯ ЧАСТЬ: Тишка (справа) -->
+        <div class="menu-bottom">
+            <div class="cat-item" id="grayCat">
+                <div class="cat-speech" id="graySpeech">🐾</div>
+                <div class="cat-sprite">
+                    <img src="Tisha.png" alt="Тишка">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ИГРА ===== -->
+    <div id="gameScreen">
+        <div class="game-scene">
+            <!-- Комната -->
+            <img id="roomBg" src="room1.jpg" alt="Комната">
+
+            <!-- === НЕВИДИМЫЕ ЗОНЫ === -->
+            <div class="pixel-zone" style="top: 48%; left: 14%; width: 25%; height: 35%;" data-title="💻 Ноутбук" data-text="Открываю почту и вижу письмо от друзей... Ого! Они приглашают меня на свадьбу! 15 июня в 17:00. Красивое письмо с сердечками. Надо бы сохранить памятку на телефон, чтобы ничего не забыть." data-sound="click.mp3"></div>
+            
+            <div class="pixel-zone" style="top: 5%; left: 87%; width: 13%; height: 48%;" data-title="🗺️ Карта на стене" data-text="На карте отмечен ресторан «Старый маяк». Я знаю это место — там вкусно кормят и красивый зал. Проложу маршрут, чтобы точно не опоздать." data-is-map="true" data-sound="map.mp3"></div>
+            
+            <div class="pixel-zone" style="top: 14%; left: 0%; width: 9%; height: 20%;" data-title="🖼️ Портрет" data-text="Какое тёплое фото! Смотрю на них и улыбаюсь. Столько лет вместе, а теперь свадьба. Они выглядят такими счастливыми... Уверен, это будет самый душевный вечер." data-is-portrait="true" data-sound="foto.mp3"></div>
+            
+            <div class="pixel-zone" style="top: 80%; left: 55%; width: 9%; height: 10%;" data-title="🔑 Ключи от авто" data-text="Ключи на месте. Пора собираться в дорогу! До «Старого маяка» около 20 минут. Выеду пораньше, чтобы не нервничать. И вообще — нужно выглядеть на все сто!" data-sound="bipbip.mp3"></div>
+            
+            <div class="pixel-zone" style="top: 79%; left: 70%; width: 19%; height: 15%;" data-title="📖 Ежедневник" data-text="Открываю ежедневник и вижу заметку: «15 июня, 17:00 — свадьба. Дресс-код: уютный шик. Настроение: праздничное!». Хорошо, что они всё продумали и даже напомнили про сменку." data-sound="list.mp3"></div>
+            
+            <div class="pixel-zone" style="top: 64%; left: 60%; width: 10%; height: 15%;" data-title="☕ Кружка с кофе" data-text="Хм… кофе совсем остыл. Похоже, здесь долго сидели и готовили этот праздник. Чувствуется, сколько любви вложено в каждую деталь. Выпью хотя бы глоток за их счастье!" data-sound="kofe.mp3"></div>
+
+            <!-- ФИНАЛЬНАЯ КНОПКА -->
+            <button class="pixel-btn btn-final" id="finalBtn">
+                💌 Открыть приглашение
+            </button>
+
+            <button class="btn-exit-game" id="exitToMenuBtn">↩ Меню</button>
+            <button class="btn-time-toggle" id="timeToggleBtn">🌙</button>
+            <div class="progress-counter" id="progressCounter">🔍 0 / 6</div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== МОДАЛЬНОЕ ОКНО ===== -->
+<div class="pixel-modal" id="pixelModal">
+    <div class="pixel-modal-box">
+        <h2 id="modalTitle">Заголовок</h2>
+        <div id="modalContent"><p id="modalText">Текст</p></div>
+        <button class="pixel-btn" id="modalCloseBtn">✨ Понял!</button>
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!--  СКРИПТ                                    -->
+<!-- ========================================== -->
+<script>
+    // ==========================================
+    // 1. КОМНАТА (ДЕНЬ/НОЧЬ)
+    // ==========================================
+    const roomImages = {
+        day: 'room1.jpg',
+        night: 'room2.jpeg'
+    };
+
+    let currentTime = 'day';
+    const roomBg = document.getElementById('roomBg');
+
+    function setTimeOfDay(time) {
+        currentTime = time;
+        roomBg.src = roomImages[time];
+        document.getElementById('timeToggleBtn').textContent = time === 'day' ? '🌙' : '☀️';
+    }
+
+    const hour = new Date().getHours();
+    if (hour >= 21 || hour < 6) {
+        setTimeOfDay('night');
+    } else {
+        setTimeOfDay('day');
+    }
+
+    document.getElementById('timeToggleBtn').addEventListener('click', function() {
+        const newTime = currentTime === 'day' ? 'night' : 'day';
+        setTimeOfDay(newTime);
+    });
+
+    // ==========================================
+    // 2. НАВИГАЦИЯ
+    // ==========================================
+    const menu = document.getElementById('menuScreen');
+    const game = document.getElementById('gameScreen');
+    const startBtn = document.getElementById('startGameBtn');
+    const exitBtn = document.getElementById('exitToMenuBtn');
+    const howToPlayBtn = document.getElementById('howToPlayBtn');
+
+    function showGame() {
+        menu.classList.add('hidden');
+        game.classList.add('active');
+        if (soundEnabled && music) music.play().catch(() => {});
+    }
+    function showMenu() {
+        menu.classList.remove('hidden');
+        game.classList.remove('active');
+        if (music) { music.pause(); music.currentTime = 0; }
+        resetGame();
+    }
+    startBtn.addEventListener('click', showGame);
+    exitBtn.addEventListener('click', showMenu);
+
+  howToPlayBtn.addEventListener('click', function() {
+    modalTitle.textContent = '❓ Как играть';
+    modalContent.innerHTML = `
+        <p>🕵️‍♀️ Тыкай по всем предметам на столе.<br><br>
+        Найди ⭐ все 6 секретов ⭐, чтобы получить приглашение на свадьбу!<br><br>
+        👆 После сбора всех секретов появится кнопка с финалом.<br><br>
+        🐱 Не забудь нажать на котов — они тоже хотят поздороваться!</p>
+    `;
+    modal.classList.add('show');
+});
+
+    // ==========================================
+    // 3. ЗВУК
+    // ==========================================
+    let soundEnabled = true;
+    let music = null;
+    function initMusic() {
+        if (!music) {
+            music = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3');
+            music.loop = true;
+            music.volume = 0.2;
+        }
+        return music;
+    }
+    document.getElementById('soundToggleBtn').addEventListener('click', function() {
+        soundEnabled = !soundEnabled;
+        this.textContent = soundEnabled ? '🔊' : '🔇';
+        if (soundEnabled && game.classList.contains('active')) initMusic().play().catch(() => {});
+        else if (music) music.pause();
+    });
+    document.addEventListener('click', function initMusicOnClick() {
+        if (soundEnabled && game.classList.contains('active')) initMusic().play().catch(() => {});
+        document.removeEventListener('click', initMusicOnClick);
+    }, { once: true });
+
+    // ==========================================
+    // 4. ЗВУКИ ДЛЯ ЗОН
+    // ==========================================
+    function playZoneSound(soundFile) {
+        if (!soundEnabled) return;
+        const audio = new Audio(soundFile);
+        audio.volume = 0.3;
+        audio.play().catch(() => {});
+    }
+
+    // ==========================================
+    // 5. КОТЫ
+    // ==========================================
+    function playCatSound(type) {
+        if (!soundEnabled) return;
+        const url = type === 'purr' ? 'mur.mp3' : 'myau.mp3';
+        const snd = new Audio(url);
+        snd.volume = 0.3;
+        snd.play().catch(() => {});
+    }
+    function showSpeech(el, txt) {
+        el.textContent = txt;
+        el.classList.add('show');
+        clearTimeout(el._timeout);
+        el._timeout = setTimeout(() => el.classList.remove('show'), 3000);
+    }
+
+    document.getElementById('gingerCat').addEventListener('click', function() {
+        playCatSound('purr');
+        showSpeech(document.getElementById('gingerSpeech'), 'Мррр… Привет! Я Фокс! 🧡');
+    });
+
+    document.getElementById('grayCat').addEventListener('click', function() {
+        playCatSound('meow');
+        showSpeech(document.getElementById('graySpeech'), 'Мяу! Я Тишка! Привет! 🐾');
+    });
+
+    // ==========================================
+    // 6. ИГРОВЫЕ ЗОНЫ
+    // ==========================================
+    const zones = document.querySelectorAll('.pixel-zone');
+    const modal = document.getElementById('pixelModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalContent = document.getElementById('modalContent');
+    const modalClose = document.getElementById('modalCloseBtn');
+
+    let foundCount = 0;
+    const totalZones = zones.length;
+    const progressCounter = document.getElementById('progressCounter');
+    const finalBtn = document.getElementById('finalBtn');
+    const foundStatus = new Array(totalZones).fill(false);
+
+    zones.forEach((zone, index) => {
+        zone.addEventListener('click', function(e) {
+            e.stopPropagation();
+            
+            const soundFile = this.dataset.sound;
+            if (soundFile) {
+                playZoneSound(soundFile);
+            }
+            
+            const title = this.dataset.title || 'Секрет!';
+            const text = this.dataset.text || 'Ты что-то нашёл!';
+            const isMap = this.dataset.isMap === 'true';
+            const isPortrait = this.dataset.isPortrait === 'true';
+
+            modalContent.innerHTML = '';
+            
+            if (isPortrait) {
+                const img = document.createElement('img');
+                img.src = 'Foto.jpeg';
+                img.alt = 'Портрет';
+                modalContent.appendChild(img);
+            }
+            
+            const p = document.createElement('p');
+            p.textContent = text;
+            modalContent.appendChild(p);
+
+            if (isMap) {
+                const mapBtn = document.createElement('button');
+                mapBtn.className = 'pixel-btn';
+                mapBtn.textContent = '🗺️ Открыть карту';
+                mapBtn.style.marginTop = '10px';
+                mapBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    window.open('https://yandex.ru/maps/?text=Москва,+ресторан+Старый+маяк', '_blank');
+                });
+                modalContent.appendChild(mapBtn);
+            }
+
+            modalTitle.textContent = title;
+            modal.classList.add('show');
+
+            if (!foundStatus[index]) {
+                foundStatus[index] = true;
+                foundCount++;
+                progressCounter.textContent = `🔍 ${foundCount} / ${totalZones}`;
+                
+                if (foundCount === totalZones) {
+                    finalBtn.style.display = 'block';
+                    progressCounter.classList.add('complete');
+                }
+            }
+        });
+    });
+
+    // ===== ФИНАЛЬНАЯ КНОПКА =====
+    finalBtn.addEventListener('click', function() {
+        playZoneSound('fanfary.mp3');
+        modalTitle.textContent = '🎉 Всё готово!';
+        modalContent.innerHTML = `
+            <p>Итак, я всё проверил: 15 июня в 17:00 в ресторане «Старый маяк».<br><br>
+            Карту посмотрел, памятку скачал, ключи взял.<br><br>
+            Осталось только приехать и подарить им свою улыбку.<br><br>
+            ❤️ До встречи!</p>
+            <button class="pixel-btn" id="finalPdfBtn" style="font-size:0.6rem;padding:8px 20px;margin-top:10px;">📥 Скачать памятку (PDF)</button>
+        `;
+        document.getElementById('finalPdfBtn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            alert('📄 Здесь будет скачивание PDF-файла. Положи файл pamyatka.pdf в папку.');
+        });
+        modal.classList.add('show');
+        this.style.display = 'none';
+    });
+
+    // ===== ЗАКРЫТИЕ МОДАЛКИ =====
+    modalClose.addEventListener('click', () => modal.classList.remove('show'));
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') modal.classList.remove('show'); });
+
+    // ==========================================
+    // 7. СБРОС ИГРЫ
+    // ==========================================
+    function resetGame() {
+        foundCount = 0;
+        foundStatus.fill(false);
+        progressCounter.textContent = `🔍 0 / ${totalZones}`;
+        progressCounter.classList.remove('complete');
+        finalBtn.style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
