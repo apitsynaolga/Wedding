@@ -298,12 +298,6 @@
             box-shadow: inset 4px 4px 0 #9b6250, inset -4px -4px 0 #ecd1a4;
         }
 
-        /* Выделение текста в окошках */
-        .highlight {
-            color: #cd593c;
-            text-shadow: 2px 2px 0 #9b6250;
-        }
-
         /* ===== КНОПКИ НА ИГРОВОМ ЭКРАНЕ (УВЕЛИЧЕНЫ ×1.5) ===== */
         .btn-exit-game {
             position: absolute;
@@ -691,6 +685,20 @@
     document.getElementById('timeToggleBtn').addEventListener('click', function() {
         const newTime = currentTime === 'day' ? 'night' : 'day';
         setTimeOfDay(newTime);
+        
+        // Переключаем музыку
+        if (soundEnabled) {
+            const file = getMusicFile();
+            if (music) {
+                music.pause();
+                music.currentTime = 0;
+            }
+            music = new Audio(file);
+            music.loop = true;
+            music.volume = 0.08;
+            currentMusicFile = file;
+            music.play().catch(() => {});
+        }
     });
 
     // ==========================================
@@ -705,51 +713,93 @@
     function showGame() {
         menu.classList.add('hidden');
         game.classList.add('active');
-        if (soundEnabled && music) music.play().catch(() => {});
+        // Музыка продолжает играть
     }
+
     function showMenu() {
         menu.classList.remove('hidden');
         game.classList.remove('active');
-        if (music) { music.pause(); music.currentTime = 0; }
         resetGame();
     }
+
     startBtn.addEventListener('click', showGame);
     exitBtn.addEventListener('click', showMenu);
 
-  howToPlayBtn.addEventListener('click', function() {
-    modalTitle.textContent = '❓ Как играть';
-    modalContent.innerHTML = `
-        <p>🕵️‍♀️ Тыкай по всем предметам на столе.<br><br>
-        Найди ⭐ все 6 секретов ⭐, чтобы получить приглашение на свадьбу!<br><br>
-        👆 После сбора всех секретов появится кнопка с финалом.<br><br>
-        🐱 Не забудь нажать на котов — они тоже хотят поздороваться!</p>
-    `;
-    modal.classList.add('show');
-});
+    howToPlayBtn.addEventListener('click', function() {
+        modalTitle.textContent = '❓ Как играть';
+        modalContent.innerHTML = `
+            <p>🕵️‍♀️ Ищи активные предметы на столе <br><br>
+            Найди ⭐ все 6 секретов ⭐, чтобы получить приглашение на свадьбу!<br><br>
+            👆 После сбора всех секретов появится кнопка с финалом <br><br>
+            🐱 Подсказка: котики тоже хотят поздороваться!</p>
+        `;
+        modal.classList.add('show');
+    });
 
     // ==========================================
-    // 3. ЗВУК
+    // 3. ЗВУК (МУЗЫКА ДЕНЬ/НОЧЬ)
     // ==========================================
     let soundEnabled = true;
     let music = null;
-    function initMusic() {
-        if (!music) {
-            music = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3');
+    let currentMusicFile = '';
+
+    const musicFiles = {
+        day: 'day.mp3',
+        night: 'night.mp3'
+    };
+
+    function getMusicFile() {
+        if (currentTime === 'night') {
+            return musicFiles.night;
+        } else {
+            return musicFiles.day;
+        }
+    }
+
+    function initMusic(forcePlay = false) {
+        const file = getMusicFile();
+        if (!music || currentMusicFile !== file) {
+            if (music) {
+                music.pause();
+                music.currentTime = 0;
+            }
+            music = new Audio(file);
             music.loop = true;
-            music.volume = 0.2;
+            music.volume = 0.08;
+            currentMusicFile = file;
+        }
+        if (forcePlay || soundEnabled) {
+            music.play().catch(() => {
+                console.log('Автовоспроизведение заблокировано');
+            });
         }
         return music;
     }
+
+    // Запускаем музыку при первом клике (обходим блокировку автовоспроизведения)
+    document.addEventListener('click', function firstClick() {
+        if (soundEnabled) {
+            initMusic(true);
+        }
+        document.removeEventListener('click', firstClick);
+    });
+
+    // Кнопка звука — включает/выключает
     document.getElementById('soundToggleBtn').addEventListener('click', function() {
         soundEnabled = !soundEnabled;
         this.textContent = soundEnabled ? '🔊' : '🔇';
-        if (soundEnabled && game.classList.contains('active')) initMusic().play().catch(() => {});
-        else if (music) music.pause();
+        if (soundEnabled) {
+            if (music) {
+                music.play().catch(() => {});
+            } else {
+                initMusic(true);
+            }
+        } else {
+            if (music) {
+                music.pause();
+            }
+        }
     });
-    document.addEventListener('click', function initMusicOnClick() {
-        if (soundEnabled && game.classList.contains('active')) initMusic().play().catch(() => {});
-        document.removeEventListener('click', initMusicOnClick);
-    }, { once: true });
 
     // ==========================================
     // 4. ЗВУКИ ДЛЯ ЗОН
@@ -771,6 +821,7 @@
         snd.volume = 0.3;
         snd.play().catch(() => {});
     }
+
     function showSpeech(el, txt) {
         el.textContent = txt;
         el.classList.add('show');
@@ -785,7 +836,7 @@
 
     document.getElementById('grayCat').addEventListener('click', function() {
         playCatSound('meow');
-        showSpeech(document.getElementById('graySpeech'), 'Мяу! Я Тишка! Привет! 🐾');
+        showSpeech(document.getElementById('graySpeech'), 'Мяу! Я Тишка! Привет! Поиграем? 🐾');
     });
 
     // ==========================================
