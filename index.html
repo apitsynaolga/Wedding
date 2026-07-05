@@ -627,17 +627,17 @@
             <img id="roomBg" src="room1.jpg" alt="Комната">
 
             <!-- === НЕВИДИМЫЕ ЗОНЫ === -->
-            <div class="pixel-zone" style="top: 48%; left: 14%; width: 25%; height: 35%;" data-title="💻 Ноутбук" data-text="Открываю почту и вижу письмо от друзей... Ого! Они приглашают меня на свадьбу! 15 июня в 17:00. Красивое письмо с сердечками. Надо бы сохранить памятку на телефон, чтобы ничего не забыть." data-sound="click.mp3"></div>
+            <div class="pixel-zone" style="top: 48%; left: 14%; width: 25%; height: 35%;" data-title="💻 Ноутбук" data-text="Открываю почту и вижу письмо от друзей... Ого! Они приглашают меня на свадьбу! 15 июня в 17:00. Красивое письмо с сердечками. Надо бы сохранить памятку на телефон, чтобы ничего не забыть." data-sound="click.mp3" data-image="Letter.png"></div>
             
-            <div class="pixel-zone" style="top: 5%; left: 87%; width: 13%; height: 48%;" data-title="🗺️ Карта на стене" data-text="На карте отмечен ресторан «Старый маяк». Я знаю это место — там вкусно кормят и красивый зал. Проложу маршрут, чтобы точно не опоздать." data-is-map="true" data-sound="map.mp3"></div>
+            <div class="pixel-zone" style="top: 5%; left: 87%; width: 13%; height: 48%;" data-title="🗺️ Карта на стене" data-text="На карте отмечен ресторан «Старый маяк». Я знаю это место — там вкусно кормят и красивый зал. Проложу маршрут, чтобы точно не опоздать." data-is-map="true" data-sound="map.mp3" data-image="Mup.png"></div>
             
             <div class="pixel-zone" style="top: 14%; left: 0%; width: 9%; height: 20%;" data-title="🖼️ Портрет" data-text="Какое тёплое фото! Смотрю на них и улыбаюсь. Столько лет вместе, а теперь свадьба. Они выглядят такими счастливыми... Уверен, это будет самый душевный вечер." data-is-portrait="true" data-sound="foto.mp3"></div>
             
-            <div class="pixel-zone" style="top: 80%; left: 55%; width: 9%; height: 10%;" data-title="🔑 Ключи от авто" data-text="Ключи на месте. Пора собираться в дорогу! До «Старого маяка» около 20 минут. Выеду пораньше, чтобы не нервничать. И вообще — нужно выглядеть на все сто!" data-sound="bipbip.mp3"></div>
+            <div class="pixel-zone" style="top: 80%; left: 55%; width: 9%; height: 10%;" data-title="🔑 Ключи от авто" data-text="Ключи на месте. Пора собираться в дорогу! До «Старого маяка» около 20 минут. Выеду пораньше, чтобы не нервничать. И вообще — нужно выглядеть на все сто!" data-sound="bipbip.mp3" data-image="Key.png"></div>
             
-            <div class="pixel-zone" style="top: 79%; left: 70%; width: 19%; height: 15%;" data-title="📖 Ежедневник" data-text="Открываю ежедневник и вижу заметку: «15 июня, 17:00 — свадьба. Дресс-код: уютный шик. Настроение: праздничное!». Хорошо, что они всё продумали и даже напомнили про сменку." data-sound="list.mp3"></div>
+            <div class="pixel-zone" style="top: 79%; left: 70%; width: 19%; height: 15%;" data-title="📖 Ежедневник" data-text="Открываю ежедневник и вижу заметку: «15 июня, 17:00 — свадьба. Дресс-код: уютный шик. Настроение: праздничное!». Хорошо, что они всё продумали и даже напомнили про сменку." data-sound="list.mp3" data-image="Text.png"></div>
             
-            <div class="pixel-zone" style="top: 64%; left: 60%; width: 10%; height: 15%;" data-title="☕ Кружка с кофе" data-text="Хм… кофе совсем остыл. Похоже, здесь долго сидели и готовили этот праздник. Чувствуется, сколько любви вложено в каждую деталь. Выпью хотя бы глоток за их счастье!" data-sound="kofe.mp3"></div>
+            <div class="pixel-zone" style="top: 64%; left: 60%; width: 10%; height: 15%;" data-title="☕ Кружка с кофе" data-text="Хм… кофе совсем остыл. Похоже, здесь долго сидели и готовили этот праздник. Чувствуется, сколько любви вложено в каждую деталь. Выпью хотя бы глоток за их счастье!" data-sound="kofe.mp3" data-image="Mug.png"></div>
 
             <!-- ФИНАЛЬНАЯ КНОПКА -->
             <button class="pixel-btn btn-final" id="finalBtn">
@@ -819,6 +819,19 @@
 
             modalContent.innerHTML = '';
             
+            // 1. Показываем картинку, если есть атрибут data-image
+            const imageFile = this.dataset.image;
+            if (imageFile) {
+                const img = document.createElement('img');
+                img.src = imageFile;
+                img.alt = title;
+                img.style.maxWidth = '100%';
+                img.style.marginBottom = '15px';
+                img.style.borderRadius = '0px';
+                modalContent.appendChild(img);
+            }
+            
+            // 2. Показываем портрет, если есть data-is-portrait
             if (isPortrait) {
                 const img = document.createElement('img');
                 img.src = 'Foto.jpeg';
@@ -826,6 +839,7 @@
                 modalContent.appendChild(img);
             }
             
+            // 3. Показываем текст
             const p = document.createElement('p');
             p.textContent = text;
             modalContent.appendChild(p);
