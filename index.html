@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Свадебный квест</title>
     <style>
-        /* ===== ШРИФТ ===== */
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
         * {
@@ -114,13 +113,11 @@
             padding: 5px;
         }
 
-        /* Фокс — ширина 200px, высота уменьшена на 25% */
         #gingerCat .cat-sprite {
             width: 200px;
             height: 120px;
         }
 
-        /* Тишка — ширина 130px, высота уменьшена на 25% */
         #grayCat .cat-sprite {
             width: 130px;
             height: 190px;
@@ -238,7 +235,6 @@
             margin-top: 5px;
         }
 
-        /* Кнопки «Начать» и «Как играть» — одинаковой ширины */
         .menu-center .pixel-btn {
             flex: 1 1 auto;
             min-width: 140px;
@@ -246,7 +242,6 @@
             white-space: nowrap;
         }
 
-        /* Кнопка звука — круглая, как была */
         .menu-center .sound-btn {
             background: #9b6250;
             border: none;
@@ -298,7 +293,7 @@
             box-shadow: inset 4px 4px 0 #9b6250, inset -4px -4px 0 #ecd1a4;
         }
 
-        /* ===== КНОПКИ НА ИГРОВОМ ЭКРАНЕ (УВЕЛИЧЕНЫ ×1.5) ===== */
+        /* ===== КНОПКИ НА ИГРОВОМ ЭКРАНЕ ===== */
         .btn-exit-game {
             position: absolute;
             top: 16px;
@@ -452,7 +447,7 @@
             font-size: 1.2rem;
             color: #543235;
             text-shadow: 2px 2px 0 #ecd1a4;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             letter-spacing: 1px;
         }
 
@@ -477,6 +472,26 @@
             border-radius: 0px;
             margin-bottom: 15px;
             border: 2px solid #cd7542;
+        }
+
+        /* ===== КНОПКА-КОНВЕРТ (ТОЛЬКО В МЕНЮ) ===== */
+        .btn-later {
+            background: #543235;
+            border: 3px solid #cd7542;
+            color: #ecd1a4;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 1.4rem;
+            padding: 8px 12px;
+            box-shadow: inset -3px -3px 0 #1a0f1f, inset 3px 3px 0 #79606f;
+            cursor: pointer;
+            transition: 0.05s;
+        }
+
+        .btn-later:hover {
+            background: #cd593c;
+        }
+        .btn-later:active {
+            transform: scale(0.9);
         }
 
         /* ===== ФИНАЛЬНАЯ КНОПКА ===== */
@@ -507,6 +522,19 @@
             100% { transform: translateX(-50%) scale(1); }
         }
 
+        /* ===== СТИЛИ ДЛЯ ТИТРОВ ===== */
+        .credits-text {
+            font-size: 0.8rem;
+            line-height: 2;
+            text-align: center;
+            color: #1a0f1f;
+            white-space: pre-line;
+        }
+
+        .credits-text .highlight {
+            color: #cd593c;
+        }
+
         /* ===== АДАПТАЦИЯ ===== */
         @media (max-width: 700px) {
             .pixel-logo { font-size: 2rem; }
@@ -515,7 +543,9 @@
             .pixel-modal-box { padding: 20px; }
             .pixel-modal-box h2 { font-size: 0.9rem; }
             .pixel-modal-box p { font-size: 0.6rem; }
-            
+            .credits-text { font-size: 0.7rem; }
+            .btn-later { font-size: 1.2rem; padding: 6px 10px; }
+
             .menu-center .pixel-btn {
                 min-width: 100px;
                 font-size: 0.6rem;
@@ -526,7 +556,7 @@
                 height: 45px;
                 font-size: 1.2rem;
             }
-            
+
             #gingerCat .cat-sprite {
                 width: 120px;
                 height: 75px;
@@ -535,7 +565,7 @@
                 width: 90px;
                 height: 75px;
             }
-            
+
             .cat-speech {
                 font-size: 0.45rem;
                 max-width: 140px;
@@ -543,14 +573,14 @@
                 padding: 5px 10px;
                 white-space: normal;
             }
-            
+
             #gingerCat .cat-speech {
                 top: 105%;
             }
             #grayCat .cat-speech {
                 bottom: 105%;
             }
-            
+
             .btn-exit-game {
                 font-size: 0.6rem;
                 padding: 10px 16px;
@@ -570,15 +600,12 @@
 </head>
 <body>
 
-<!-- ========================================== -->
-<!--  HTML КОНТЕНТ                              -->
-<!-- ========================================== -->
 <div id="app">
 
     <!-- ===== МЕНЮ ===== -->
     <div id="menuScreen">
 
-        <!-- ВЕРХНЯЯ ЧАСТЬ: Фокс (слева) -->
+        <!-- Фокс -->
         <div class="menu-top">
             <div class="cat-item" id="gingerCat">
                 <div class="cat-speech" id="gingerSpeech">🧡</div>
@@ -588,7 +615,7 @@
             </div>
         </div>
 
-        <!-- СРЕДНЯЯ ЧАСТЬ: Текст и кнопки (по центру) -->
+        <!-- Центр -->
         <div class="menu-center">
             <div class="pixel-logo">
                 ♥ Свадебный<br>квест
@@ -603,7 +630,7 @@
             </div>
         </div>
 
-        <!-- НИЖНЯЯ ЧАСТЬ: Тишка (справа) -->
+        <!-- Тишка -->
         <div class="menu-bottom">
             <div class="cat-item" id="grayCat">
                 <div class="cat-speech" id="graySpeech">🐾</div>
@@ -612,30 +639,34 @@
                 </div>
             </div>
         </div>
+
+        <!-- КНОПКА-КОНВЕРТ (ТОЛЬКО В МЕНЮ) -->
+        <div style="position: absolute; bottom: 16px; left: 16px; z-index: 60;">
+            <button class="btn-later" id="laterBtn">✉️</button>
+        </div>
+
     </div>
 
     <!-- ===== ИГРА ===== -->
     <div id="gameScreen">
         <div class="game-scene">
-            <!-- Комната -->
             <img id="roomBg" src="room1.jpg" alt="Комната">
 
-            <!-- === НЕВИДИМЫЕ ЗОНЫ === -->
+            <!-- ЗОНЫ -->
             <div class="pixel-zone" style="top: 48%; left: 14%; width: 25%; height: 35%;" data-title="💻 Ноутбук" data-text="Открываю почту и вижу письмо от друзей... Ого! Они приглашают меня на свадьбу! 15 июня в 17:00. Красивое письмо с сердечками. Надо бы сохранить памятку на телефон, чтобы ничего не забыть." data-sound="click.mp3" data-image="Letter.png"></div>
-            
-            <div class="pixel-zone" style="top: 5%; left: 87%; width: 13%; height: 48%;" data-title="🗺️ Карта на стене" data-text="На карте отмечен ресторан «Старый маяк». Я знаю это место — там вкусно кормят и красивый зал. Проложу маршрут, чтобы точно не опоздать." data-is-map="true" data-sound="map.mp3" data-image="Mup.png"></div>
-            
+
+            <div class="pixel-zone" style="top: 5%; left: 87%; width: 13%; height: 48%;" data-title="🗺️ Карта на стене" data-text="На карте отмечен ресторан «Старый маяк». Я знаю это место — там вкусно кормят и красивый зал. Проложу маршрут, чтобы точно не опоздать." data-is-map="true" data-sound="map.mp3" data-image="Map.jpeg"></div>
+
             <div class="pixel-zone" style="top: 14%; left: 0%; width: 9%; height: 20%;" data-title="🖼️ Портрет" data-text="Какое тёплое фото! Смотрю на них и улыбаюсь. Столько лет вместе, а теперь свадьба. Они выглядят такими счастливыми... Уверен, это будет самый душевный вечер." data-is-portrait="true" data-sound="foto.mp3"></div>
-            
+
             <div class="pixel-zone" style="top: 80%; left: 55%; width: 9%; height: 10%;" data-title="🔑 Ключи от авто" data-text="Ключи на месте. Пора собираться в дорогу! До «Старого маяка» около 20 минут. Выеду пораньше, чтобы не нервничать. И вообще — нужно выглядеть на все сто!" data-sound="bipbip.mp3" data-image="Key.png"></div>
-            
+
             <div class="pixel-zone" style="top: 79%; left: 70%; width: 19%; height: 15%;" data-title="📖 Ежедневник" data-text="Открываю ежедневник и вижу заметку: «15 июня, 17:00 — свадьба. Дресс-код: уютный шик. Настроение: праздничное!». Хорошо, что они всё продумали и даже напомнили про сменку." data-sound="list.mp3" data-image="Text.png"></div>
-            
+
             <div class="pixel-zone" style="top: 64%; left: 60%; width: 10%; height: 15%;" data-title="☕ Кружка с кофе" data-text="Хм… кофе совсем остыл. Похоже, здесь долго сидели и готовили этот праздник. Чувствуется, сколько любви вложено в каждую деталь. Выпью хотя бы глоток за их счастье!" data-sound="kofe.mp3" data-image="Mug.png"></div>
 
-            <!-- ФИНАЛЬНАЯ КНОПКА -->
             <button class="pixel-btn btn-final" id="finalBtn">
-                💌 Открыть приглашение
+                💌 Открыть письмо
             </button>
 
             <button class="btn-exit-game" id="exitToMenuBtn">↩ Меню</button>
@@ -643,6 +674,7 @@
             <div class="progress-counter" id="progressCounter">🔍 0 / 6</div>
         </div>
     </div>
+
 </div>
 
 <!-- ===== МОДАЛЬНОЕ ОКНО ===== -->
@@ -654,9 +686,6 @@
     </div>
 </div>
 
-<!-- ========================================== -->
-<!--  СКРИПТ                                    -->
-<!-- ========================================== -->
 <script>
     // ==========================================
     // 1. КОМНАТА (ДЕНЬ/НОЧЬ)
@@ -685,8 +714,7 @@
     document.getElementById('timeToggleBtn').addEventListener('click', function() {
         const newTime = currentTime === 'day' ? 'night' : 'day';
         setTimeOfDay(newTime);
-        
-        // Переключаем музыку
+
         if (soundEnabled) {
             const file = getMusicFile();
             if (music) {
@@ -713,7 +741,6 @@
     function showGame() {
         menu.classList.add('hidden');
         game.classList.add('active');
-        // Музыка продолжает играть
     }
 
     function showMenu() {
@@ -776,7 +803,6 @@
         return music;
     }
 
-    // Запускаем музыку при первом клике (обходим блокировку автовоспроизведения)
     document.addEventListener('click', function firstClick() {
         if (soundEnabled) {
             initMusic(true);
@@ -784,7 +810,6 @@
         document.removeEventListener('click', firstClick);
     });
 
-    // Кнопка звука — включает/выключает
     document.getElementById('soundToggleBtn').addEventListener('click', function() {
         soundEnabled = !soundEnabled;
         this.textContent = soundEnabled ? '🔊' : '🔇';
@@ -846,7 +871,7 @@
     const modal = document.getElementById('pixelModal');
     const modalTitle = document.getElementById('modalTitle');
     const modalContent = document.getElementById('modalContent');
-    const modalClose = document.getElementById('modalCloseBtn');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
 
     let foundCount = 0;
     const totalZones = zones.length;
@@ -857,20 +882,19 @@
     zones.forEach((zone, index) => {
         zone.addEventListener('click', function(e) {
             e.stopPropagation();
-            
+
             const soundFile = this.dataset.sound;
             if (soundFile) {
                 playZoneSound(soundFile);
             }
-            
+
             const title = this.dataset.title || 'Секрет!';
             const text = this.dataset.text || 'Ты что-то нашёл!';
             const isMap = this.dataset.isMap === 'true';
             const isPortrait = this.dataset.isPortrait === 'true';
 
             modalContent.innerHTML = '';
-            
-            // 1. Показываем картинку, если есть атрибут data-image
+
             const imageFile = this.dataset.image;
             if (imageFile) {
                 const img = document.createElement('img');
@@ -881,16 +905,14 @@
                 img.style.borderRadius = '0px';
                 modalContent.appendChild(img);
             }
-            
-            // 2. Показываем портрет, если есть data-is-portrait
+
             if (isPortrait) {
                 const img = document.createElement('img');
                 img.src = 'Foto.jpeg';
                 img.alt = 'Портрет';
                 modalContent.appendChild(img);
             }
-            
-            // 3. Показываем текст
+
             const p = document.createElement('p');
             p.textContent = text;
             modalContent.appendChild(p);
@@ -909,12 +931,13 @@
 
             modalTitle.textContent = title;
             modal.classList.add('show');
+            modalCloseBtn.style.display = 'block';
 
             if (!foundStatus[index]) {
                 foundStatus[index] = true;
                 foundCount++;
                 progressCounter.textContent = `🔍 ${foundCount} / ${totalZones}`;
-                
+
                 if (foundCount === totalZones) {
                     finalBtn.style.display = 'block';
                     progressCounter.classList.add('complete');
@@ -923,7 +946,85 @@
         });
     });
 
-    // ===== ФИНАЛЬНАЯ КНОПКА =====
+    // ==========================================
+    // 7. ФИНАЛ + ТИТРЫ + ПАМЯТКА
+    // ==========================================
+    function showCredits() {
+        const creditsModal = document.createElement('div');
+        creditsModal.className = 'pixel-modal show';
+        creditsModal.id = 'creditsModal';
+        creditsModal.innerHTML = `
+            <div class="pixel-modal-box" style="max-width: 560px;">
+                <h2 style="text-align:center; font-size:1.2rem;">🎬 ТИТРЫ</h2>
+                <div class="credits-text">
+                    ★ СВАДЕБНЫЙ КВЕСТ ★
+                    Все секреты найдены! 🎉
+
+                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+                    <span class="highlight">В ГЛАВНЫХ РОЛЯХ:</span>
+
+                    👰🏻‍♀️ Ольга — генеральный продюссер,
+                    идейный вдохновитель и сценарист
+
+                    🤵🏻‍♂️ Алексей — со-сценарист
+                    (читал вслух и одобрял)
+
+                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+                    <span class="highlight">ЗА КУЛИСАМИ:</span>
+
+                    🎬 Генеральный продюссер — Ольга
+                    ✍️ Сценарист — Ольга (при участии Алексея,
+                    который говорил: «классно, давай так»)
+                    🎨 Художник — нейросети и Ольга
+                    💻 Технический директор — я (с помощью ИИ)
+
+                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+                    <span class="highlight">В ЭПИЗОДИЧЕСКИХ РОЛЯХ:</span>
+
+                    🐱 Фокс — удалил последнюю рабочую версию
+                    🐱 Тихомира — нажала на «не сохранять»
+                    и помешала печатать
+
+                    ☕ Кружка с кофе — поставщик сил
+                    🗺️ Карта — вдохновитель для маршрутов
+                    💻 Ноутбук — хранитель тайн и угроз
+
+                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+                    <span class="highlight">ИСКРЕННЕ БЛАГОДАРИМ:</span>
+
+                    Всех, кто нашёл все секреты!
+                    Вы — главные герои этого вечера!
+
+                    🫶 Будем ждать вас 15 июня!
+
+                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                    Спасибо за игру! 🎮
+                </div>
+                <button class="pixel-btn" id="closeCreditsBtn" style="font-size:0.7rem; padding:10px 28px; margin-top:15px;">✨ Закрыть титры</button>
+            </div>
+        `;
+        document.body.appendChild(creditsModal);
+
+        document.getElementById('closeCreditsBtn').addEventListener('click', function() {
+            creditsModal.remove();
+        });
+
+        creditsModal.addEventListener('click', function(e) {
+            if (e.target === creditsModal) {
+                creditsModal.remove();
+            }
+        });
+    }
+
+    function downloadPDF() {
+        // ЗАМЕНИТЕ НА РЕАЛЬНУЮ ССЫЛКУ НА PDF
+        alert('📄 Здесь будет скачивание PDF-файла. Положите файл pamyatka.pdf в папку с сайтом.');
+    }
+
     finalBtn.addEventListener('click', function() {
         playZoneSound('fanfary.mp3');
         modalTitle.textContent = '🎉 Всё готово!';
@@ -932,23 +1033,68 @@
             Карту посмотрел, памятку скачал, ключи взял.<br><br>
             Осталось только приехать и подарить им свою улыбку.<br><br>
             ❤️ До встречи!</p>
-            <button class="pixel-btn" id="finalPdfBtn" style="font-size:0.6rem;padding:8px 20px;margin-top:10px;">📥 Скачать памятку (PDF)</button>
+            <button class="pixel-btn" id="creditsBtn" style="font-size:0.6rem;padding:8px 20px;margin-top:10px;">🎬 Посмотреть титры</button>
+            <button class="pixel-btn" id="finalDownloadBtn" style="font-size:0.6rem;padding:8px 20px;margin-top:10px;">📥 Скачать памятку (PDF)</button>
         `;
-        document.getElementById('finalPdfBtn').addEventListener('click', function(e) {
+
+        document.getElementById('creditsBtn').addEventListener('click', function(e) {
             e.stopPropagation();
-            alert('📄 Здесь будет скачивание PDF-файла. Положи файл pamyatka.pdf в папку.');
+            showCredits();
         });
+
+        document.getElementById('finalDownloadBtn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            downloadPDF();
+        });
+
         modal.classList.add('show');
+        modalCloseBtn.style.display = 'block';
         this.style.display = 'none';
     });
 
-    // ===== ЗАКРЫТИЕ МОДАЛКИ =====
-    modalClose.addEventListener('click', () => modal.classList.remove('show'));
+    // ==========================================
+    // 8. КНОПКА-КОНВЕРТ «✉️» (ТОЛЬКО В МЕНЮ)
+    // ==========================================
+    document.getElementById('laterBtn').addEventListener('click', function(e) {
+        e.stopPropagation();
+        modalTitle.textContent = '✉️ Письмо с пометкой «вскрыть позже»';
+        modalContent.innerHTML = `
+            <p style="margin-bottom:20px;">📩 Вы нашли информационное письмо с пометкой «вскрыть позже».</p>
+            <p style="margin-bottom:20px;">Чтобы его открыть, мы приглашаем вас пройти наш небольшой квест.<br>
+            В нём всего 6 секретов — это займёт пару минут.</p>
+            <p style="margin-bottom:20px;">Если вы уже прошли или очень торопитесь — нажмите «Всё равно вскрыть».</p>
+            <p style="margin-bottom:20px;">❤️</p>
+            <button class="pixel-btn" id="closeLaterBtn" style="font-size:0.6rem;padding:8px 20px;margin-right:10px;">🎮 Пройти квест</button>
+            <button class="pixel-btn" id="downloadLaterBtn" style="font-size:0.6rem;padding:8px 20px;">✉️ Всё равно вскрыть</button>
+        `;
+        modal.classList.add('show');
+
+        // Скрываем кнопку «Понял!»
+        modalCloseBtn.style.display = 'none';
+
+        document.getElementById('closeLaterBtn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            modal.classList.remove('show');
+            modalCloseBtn.style.display = 'block';
+        });
+
+        document.getElementById('downloadLaterBtn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            downloadPDF();
+            modal.classList.remove('show');
+            modalCloseBtn.style.display = 'block';
+        });
+    });
+
+    // ==========================================
+    // 9. ЗАКРЫТИЕ МОДАЛКИ
+    // ==========================================
+    modalCloseBtn.addEventListener('click', () => modal.classList.remove('show'));
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') modal.classList.remove('show'); });
 
     // ==========================================
-    // 7. СБРОС ИГРЫ
+    // 10. СБРОС ИГРЫ
     // ==========================================
     function resetGame() {
         foundCount = 0;
