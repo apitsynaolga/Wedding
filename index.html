@@ -474,7 +474,7 @@
             border: 2px solid #cd7542;
         }
 
-        /* ===== КНОПКА-КОНВЕРТ (ТОЛЬКО В МЕНЮ) ===== */
+        /* ===== КНОПКИ-ЗНАЧКИ В МЕНЮ ===== */
         .btn-later {
             background: #543235;
             border: 3px solid #cd7542;
@@ -535,6 +535,69 @@
             color: #cd593c;
         }
 
+        /* ===== ВСПЛЫВАШКА АЧИВОК (как в Steam) ===== */
+        .achievement-popup {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #2d241a;
+            border: 4px solid #cd7542;
+            padding: 15px 20px;
+            z-index: 1000;
+            box-shadow: 0 0 30px rgba(0,0,0,0.7);
+            animation: slideIn 0.5s ease;
+            max-width: 300px;
+        }
+
+        .achievement-popup.hide {
+            animation: slideOut 0.5s ease forwards;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(400px); opacity: 0; }
+        }
+
+        .achievement-popup h3 {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 0.7rem;
+            color: #ffd700;
+            margin-bottom: 8px;
+        }
+
+        .achievement-popup p {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 0.6rem;
+            color: #ecd1a4;
+            line-height: 1.6;
+            margin-bottom: 5px;
+        }
+
+        .achievement-popup .ach-name {
+            color: #cd593c;
+            font-size: 0.65rem;
+        }
+
+        /* ===== СПИСОК АЧИВОК ===== */
+        .achievements-list {
+            text-align: left;
+            font-size: 0.65rem;
+            line-height: 2;
+        }
+
+        .achievements-list .got {
+            color: #cd593c;
+        }
+
+        .achievements-list .not-got {
+            color: #9b6250;
+        }
+
         /* ===== АДАПТАЦИЯ ===== */
         @media (max-width: 700px) {
             .pixel-logo { font-size: 2rem; }
@@ -545,6 +608,9 @@
             .pixel-modal-box p { font-size: 0.6rem; }
             .credits-text { font-size: 0.7rem; }
             .btn-later { font-size: 1.2rem; padding: 6px 10px; }
+            .achievement-popup { bottom: 10px; right: 10px; padding: 10px 14px; max-width: 240px; }
+            .achievement-popup h3 { font-size: 0.6rem; }
+            .achievement-popup p { font-size: 0.5rem; }
 
             .menu-center .pixel-btn {
                 min-width: 100px;
@@ -605,7 +671,6 @@
     <!-- ===== МЕНЮ ===== -->
     <div id="menuScreen">
 
-        <!-- Фокс -->
         <div class="menu-top">
             <div class="cat-item" id="gingerCat">
                 <div class="cat-speech" id="gingerSpeech">🧡</div>
@@ -615,7 +680,6 @@
             </div>
         </div>
 
-        <!-- Центр -->
         <div class="menu-center">
             <div class="pixel-logo">
                 ♥ Свадебный<br>квест
@@ -630,7 +694,6 @@
             </div>
         </div>
 
-        <!-- Тишка -->
         <div class="menu-bottom">
             <div class="cat-item" id="grayCat">
                 <div class="cat-speech" id="graySpeech">🐾</div>
@@ -640,9 +703,11 @@
             </div>
         </div>
 
-        <!-- КНОПКА-КОНВЕРТ (ТОЛЬКО В МЕНЮ) -->
-        <div style="position: absolute; bottom: 16px; left: 16px; z-index: 60;">
+        <!-- КНОПКИ-ЗНАЧКИ (ТОЛЬКО В МЕНЮ) -->
+        <div style="position: absolute; bottom: 16px; left: 16px; z-index: 60; display: flex; gap: 10px;">
             <button class="btn-later" id="laterBtn">✉️</button>
+            <button class="btn-later" id="photoBtn">📸</button>
+            <button class="btn-later" id="achievementsBtn" style="display: none;">🏆</button>
         </div>
 
     </div>
@@ -653,17 +718,17 @@
             <img id="roomBg" src="room1.jpg" alt="Комната">
 
             <!-- ЗОНЫ -->
-            <div class="pixel-zone" style="top: 48%; left: 14%; width: 25%; height: 35%;" data-title="💻 Ноутбук" data-text="Открываю почту и вижу письмо от друзей... Ого! Они приглашают меня на свадьбу! 15 июня в 17:00. Красивое письмо с сердечками. Надо бы сохранить памятку на телефон, чтобы ничего не забыть." data-sound="click.mp3" data-image="Letter.png"></div>
+            <div class="pixel-zone" style="top: 48%; left: 14%; width: 25%; height: 35%;" data-title="💻 Ноутбук" data-text="💻 Так, почта... Ого, мне пришло письмо!<br><br>📩 «Дорогие наши!<br><br>Мы рады пригласить вас на самый важный день в нашей жизни — день, когда мы станем семьёй.<br><br>Мы очень хотим, чтобы этот вечер был тёплым, уютным и по-настоящему нашим — без лишнего шума и суеты.<br><br>Будем рады вас видеть!<br>Оля и Лёша»<br><br>📎 Ага, к письму приложена памятка. Надо не забыть скачать её в конце — там вся полная информация о свадьбе." data-sound="click.mp3" data-image="Letter.png"></div>
 
-            <div class="pixel-zone" style="top: 5%; left: 87%; width: 13%; height: 48%;" data-title="🗺️ Карта на стене" data-text="На карте отмечен ресторан «Старый маяк». Я знаю это место — там вкусно кормят и красивый зал. Проложу маршрут, чтобы точно не опоздать." data-is-map="true" data-sound="map.mp3" data-image="Map.jpeg"></div>
+            <div class="pixel-zone" style="top: 5%; left: 87%; width: 13%; height: 48%;" data-title="🗺️ Карта на стене" data-text="🗺️ Так, посмотрим на карту...<br><br>🏛️ ЗАГС — здесь ребята скажут «да» и начнут новую главу.<br>🍽️ Ресторан — а здесь продолжим праздник: вкусно, тепло и по-домашнему.<br><br>Оба места отмечены. Стоит прийти минут за 10–15, чтобы точно не опоздать!" data-is-map="true" data-sound="map.mp3" data-image="Map.jpeg"></div>
 
-            <div class="pixel-zone" style="top: 14%; left: 0%; width: 9%; height: 20%;" data-title="🖼️ Портрет" data-text="Какое тёплое фото! Смотрю на них и улыбаюсь. Столько лет вместе, а теперь свадьба. Они выглядят такими счастливыми... Уверен, это будет самый душевный вечер." data-is-portrait="true" data-sound="foto.mp3"></div>
+            <div class="pixel-zone" style="top: 14%; left: 0%; width: 9%; height: 20%;" data-title="🖼️ Портрет" data-text="🖼️ Так, кто тут у нас...<br><br>О, знакомые лица! Кажется, Оля всё-таки дожала — и вот результат.<br><br>Шучу! Но если серьёзно — они счастливы, и это главное.<br>Обязательно скажу им что-то тёплое.<br><br>📸 Ребята создали папочку для фото с праздника. Надо будет не забыть скинуть туда свои кадры.<br><br>Кажется, я где-то уже видел пустую папку... Только где?" data-is-portrait="true" data-sound="foto.mp3"></div>
 
-            <div class="pixel-zone" style="top: 80%; left: 55%; width: 9%; height: 10%;" data-title="🔑 Ключи от авто" data-text="Ключи на месте. Пора собираться в дорогу! До «Старого маяка» около 20 минут. Выеду пораньше, чтобы не нервничать. И вообще — нужно выглядеть на все сто!" data-sound="bipbip.mp3" data-image="Key.png"></div>
+            <div class="pixel-zone" style="top: 80%; left: 55%; width: 9%; height: 10%;" data-title="🔑 Ключи от авто" data-text="🔑 О, ключи!<br><br>Значит, можно ехать. Хотя... а нужна ли мне машина?<br><br>От ЗАГСа до ресторана обещали трансфер. Может, оставить её и оторваться на полную?<br><br>⏰ Время отправления: [время]<br><br>Не опаздывать — а то уедут без меня!" data-sound="bipbip.mp3" data-image="Key.png"></div>
 
-            <div class="pixel-zone" style="top: 79%; left: 70%; width: 19%; height: 15%;" data-title="📖 Ежедневник" data-text="Открываю ежедневник и вижу заметку: «15 июня, 17:00 — свадьба. Дресс-код: уютный шик. Настроение: праздничное!». Хорошо, что они всё продумали и даже напомнили про сменку." data-sound="list.mp3" data-image="Text.png"></div>
+            <div class="pixel-zone" style="top: 79%; left: 70%; width: 19%; height: 15%;" data-title="📖 Ежедневник" data-text="📖 Так, надо бы всё записать в ежедневник, чтобы ничего не забыть.<br><br>📅 [Дата]<br>⏰ [Время]<br><br>👔 Дресс-код: мягкая классика. Смокинг — это красиво, но не всегда удобно.<br><br>👶 Надо бы придумать, с кем оставить детей, чтобы отдохнуть полноценно.<br><br>💐 И кстати, цветы не стоит — они ненадолго. А вот вклад в их будущее — самое то!" data-sound="list.mp3" data-image="Text.png"></div>
 
-            <div class="pixel-zone" style="top: 64%; left: 60%; width: 10%; height: 15%;" data-title="☕ Кружка с кофе" data-text="Хм… кофе совсем остыл. Похоже, здесь долго сидели и готовили этот праздник. Чувствуется, сколько любви вложено в каждую деталь. Выпью хотя бы глоток за их счастье!" data-sound="kofe.mp3" data-image="Mug.png"></div>
+            <div class="pixel-zone" style="top: 64%; left: 60%; width: 10%; height: 15%;" data-title="☕ Кружка с кофе" data-text="☕ О, кофе! Ещё горяченький.<br><br>Значит, можно спокойно допить и ехать. Глоток бодрости — и на весь день заряжен(а)!<br><br>Кажется, всё продумано. Осталось только дождаться праздника!" data-sound="kofe.mp3" data-image="Mug.png"></div>
 
             <button class="pixel-btn btn-final" id="finalBtn">
                 💌 Открыть письмо
@@ -682,7 +747,7 @@
     <div class="pixel-modal-box">
         <h2 id="modalTitle">Заголовок</h2>
         <div id="modalContent"><p id="modalText">Текст</p></div>
-        <button class="pixel-btn" id="modalCloseBtn">✨ Понял!</button>
+        <button class="pixel-btn" id="modalCloseBtn">✨ Отлично!</button>
     </div>
 </div>
 
@@ -715,6 +780,12 @@
         const newTime = currentTime === 'day' ? 'night' : 'day';
         setTimeOfDay(newTime);
 
+        // Ачивка «Ночной сторож»
+        dayNightSwitches++;
+        if (dayNightSwitches >= 5) {
+            unlockAchievement('night_watch');
+        }
+
         if (soundEnabled) {
             const file = getMusicFile();
             if (music) {
@@ -738,9 +809,25 @@
     const exitBtn = document.getElementById('exitToMenuBtn');
     const howToPlayBtn = document.getElementById('howToPlayBtn');
 
+    let firstGameEntry = true;
+
     function showGame() {
         menu.classList.add('hidden');
         game.classList.add('active');
+        
+        if (firstGameEntry) {
+            firstGameEntry = false;
+            setTimeout(() => {
+                modalTitle.textContent = '💻 Дела...';
+                modalContent.innerHTML = `
+                    <p>Так, надо бы заняться делами...<br><br>
+                    Ой, кажется, на ноутбук пришло письмо.<br>
+                    Стоило бы его открыть.</p>
+                `;
+                modal.classList.add('show');
+                modalCloseBtn.style.display = 'block';
+            }, 500);
+        }
     }
 
     function showMenu() {
@@ -755,12 +842,15 @@
     howToPlayBtn.addEventListener('click', function() {
         modalTitle.textContent = '❓ Как играть';
         modalContent.innerHTML = `
-            <p>🕵️‍♀️ Ищи активные предметы на столе <br><br>
-            Найди ⭐ все 6 секретов ⭐, чтобы получить приглашение на свадьбу!<br><br>
-            👆 После сбора всех секретов появится кнопка с финалом <br><br>
-            🐱 Подсказка: котики тоже хотят поздороваться!</p>
+            <p>🕵️‍♀️ Привет! Поиграем в детектива?<br><br>
+            🔍 Ищи активные предметы на столе, тыкай на всё, что выглядит интересно.<br>
+            Каждый предмет расскажет вам часть истории 📖.<br><br>
+            🎯 Ваша цель — найти все секреты, чтобы получить приглашение на свадьбу.<br><br>
+            🐱 Не игнорируйте котиков! Они тоже хотят поздороваться.<br><br>
+            Удачи! Мы вас любим❤️</p>
         `;
         modal.classList.add('show');
+        modalCloseBtn.style.display = 'block';
     });
 
     // ==========================================
@@ -857,15 +947,78 @@
     document.getElementById('gingerCat').addEventListener('click', function() {
         playCatSound('purr');
         showSpeech(document.getElementById('gingerSpeech'), 'Мррр… Привет! Я Фокс! 🧡');
+        foxClicks++;
+        checkCatsAchievement();
     });
 
     document.getElementById('grayCat').addEventListener('click', function() {
         playCatSound('meow');
         showSpeech(document.getElementById('graySpeech'), 'Мяу! Я Тишка! Привет! Поиграем? 🐾');
+        tishaClicks++;
+        checkCatsAchievement();
     });
 
     // ==========================================
-    // 6. ИГРОВЫЕ ЗОНЫ
+    // 6. АЧИВКИ
+    // ==========================================
+    let foxClicks = 0;
+    let tishaClicks = 0;
+    let mugClicks = 0;
+    let mapClicks = 0;
+    let keyClicks = 0;
+    let dayNightSwitches = 0;
+    let totalZoneClicks = 0;
+    let achievements = [];
+
+    const achievementsData = {
+        cats: { name: '🐱 Любитель пушистиков', desc: 'Котики уже мурчат от удовольствия!' },
+        coffee: { name: '☕ Кофеман', desc: 'Заряд бодрости на день обеспечен!' },
+        traveler: { name: '🗺️ Путешественник', desc: 'Изучил маршрут вдоль и поперёк!' },
+        driver: { name: '🔑 Автолюбитель', desc: 'Только на газ, только вперёд!' },
+        night_watch: { name: '🌙 Ночной сторож', desc: 'Свет и тьма под вашим контролем!' },
+        curious: { name: '🕵️ Любопытная Варвара', desc: 'Ну а вдруг там что-то важное?' },
+        super_sleuth: { name: '🔍 Сыщик-переросток', desc: 'Вы явно переработали!' },
+        detective: { name: '🏆 Настоящий детектив', desc: 'Вы раскрыли это дело!' },
+        cinephile: { name: '🎬 Киноман', desc: 'Досмотрели до конца!' },
+        gamer: { name: '👑 Геймер года', desc: 'Все ачивки собраны! Вы легенда!' }
+    };
+
+    function unlockAchievement(key) {
+        if (achievements.includes(key)) return;
+        achievements.push(key);
+        
+        // Показываем всплывашку
+        const popup = document.createElement('div');
+        popup.className = 'achievement-popup';
+        popup.innerHTML = `
+            <h3>🏆 НОВАЯ АЧИВКА</h3>
+            <p class="ach-name">${achievementsData[key].name}</p>
+            <p>${achievementsData[key].desc}</p>
+        `;
+        document.body.appendChild(popup);
+
+        setTimeout(() => {
+            popup.classList.add('hide');
+            setTimeout(() => popup.remove(), 500);
+        }, 4000);
+
+        // Показываем кнопку ачивок
+        document.getElementById('achievementsBtn').style.display = 'block';
+
+        // Проверяем «Геймер года»
+        if (achievements.length === 9 && !achievements.includes('gamer')) {
+            unlockAchievement('gamer');
+        }
+    }
+
+    function checkCatsAchievement() {
+        if (foxClicks + tishaClicks >= 10) {
+            unlockAchievement('cats');
+        }
+    }
+
+    // ==========================================
+    // 7. ИГРОВЫЕ ЗОНЫ
     // ==========================================
     const zones = document.querySelectorAll('.pixel-zone');
     const modal = document.getElementById('pixelModal');
@@ -883,6 +1036,11 @@
         zone.addEventListener('click', function(e) {
             e.stopPropagation();
 
+            totalZoneClicks++;
+            if (totalZoneClicks >= 20) {
+                unlockAchievement('super_sleuth');
+            }
+
             const soundFile = this.dataset.sound;
             if (soundFile) {
                 playZoneSound(soundFile);
@@ -892,6 +1050,20 @@
             const text = this.dataset.text || 'Ты что-то нашёл!';
             const isMap = this.dataset.isMap === 'true';
             const isPortrait = this.dataset.isPortrait === 'true';
+
+            // Считаем клики для ачивок
+            if (title.includes('Кружка')) {
+                mugClicks++;
+                if (mugClicks >= 3) unlockAchievement('coffee');
+            }
+            if (title.includes('Карта')) {
+                mapClicks++;
+                if (mapClicks >= 3) unlockAchievement('traveler');
+            }
+            if (title.includes('Ключи')) {
+                keyClicks++;
+                if (keyClicks >= 3) unlockAchievement('driver');
+            }
 
             modalContent.innerHTML = '';
 
@@ -914,19 +1086,34 @@
             }
 
             const p = document.createElement('p');
-            p.textContent = text;
+            p.innerHTML = text;
             modalContent.appendChild(p);
 
             if (isMap) {
-                const mapBtn = document.createElement('button');
-                mapBtn.className = 'pixel-btn';
-                mapBtn.textContent = '🗺️ Открыть карту';
-                mapBtn.style.marginTop = '10px';
-                mapBtn.addEventListener('click', function(e) {
+                const zagcBtn = document.createElement('button');
+                zagcBtn.className = 'pixel-btn';
+                zagcBtn.textContent = '🏛️ ЗАГС';
+                zagcBtn.style.marginTop = '10px';
+                zagcBtn.style.marginRight = '10px';
+                zagcBtn.style.fontSize = '0.6rem';
+                zagcBtn.style.padding = '8px 20px';
+                zagcBtn.addEventListener('click', function(e) {
                     e.stopPropagation();
-                    window.open('https://yandex.ru/maps/?text=Москва,+ресторан+Старый+маяк', '_blank');
+                    window.open('https://yandex.ru/maps/?text=Санкт-Петербург,+Фурштатская+улица,+52', '_blank');
                 });
-                modalContent.appendChild(mapBtn);
+                modalContent.appendChild(zagcBtn);
+
+                const cafeBtn = document.createElement('button');
+                cafeBtn.className = 'pixel-btn';
+                cafeBtn.textContent = '🍽️ Ресторан';
+                cafeBtn.style.marginTop = '10px';
+                cafeBtn.style.fontSize = '0.6rem';
+                cafeBtn.style.padding = '8px 20px';
+                cafeBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    window.open('https://yandex.ru/maps/?text=Санкт-Петербург,+Суворовский+проспект,+25', '_blank');
+                });
+                modalContent.appendChild(cafeBtn);
             }
 
             modalTitle.textContent = title;
@@ -941,15 +1128,18 @@
                 if (foundCount === totalZones) {
                     finalBtn.style.display = 'block';
                     progressCounter.classList.add('complete');
+                    unlockAchievement('detective');
                 }
             }
         });
     });
 
     // ==========================================
-    // 7. ФИНАЛ + ТИТРЫ + ПАМЯТКА
+    // 8. ФИНАЛ + ТИТРЫ + ПАМЯТКА
     // ==========================================
     function showCredits() {
+        unlockAchievement('cinephile');
+        
         const creditsModal = document.createElement('div');
         creditsModal.className = 'pixel-modal show';
         creditsModal.id = 'creditsModal';
@@ -1011,28 +1201,77 @@
 
         document.getElementById('closeCreditsBtn').addEventListener('click', function() {
             creditsModal.remove();
+            // После закрытия титров — показываем список ачивок
+            if (achievements.length > 0) {
+                showAchievementsList();
+            }
         });
 
         creditsModal.addEventListener('click', function(e) {
             if (e.target === creditsModal) {
                 creditsModal.remove();
+                if (achievements.length > 0) {
+                    showAchievementsList();
+                }
+            }
+        });
+    }
+
+    function showAchievementsList() {
+        const modalAch = document.createElement('div');
+        modalAch.className = 'pixel-modal show';
+        modalAch.id = 'achievementsModal';
+        
+        let listHTML = '';
+        for (const key in achievementsData) {
+            const got = achievements.includes(key);
+            if (got) {
+                listHTML += `<div class="got">✅ ${achievementsData[key].name}<br>«${achievementsData[key].desc}»</div><br>`;
+            } else {
+                listHTML += `<div class="not-got">⬜ ${achievementsData[key].name}</div><br>`;
+            }
+        }
+
+        modalAch.innerHTML = `
+            <div class="pixel-modal-box" style="max-width: 520px;">
+                <h2 style="text-align:center; font-size:1.1rem;">🏆 ВАШИ АЧИВКИ</h2>
+                <div class="achievements-list">
+                    ${listHTML}
+                    <br>Собрано: ${achievements.length} / 10
+                </div>
+                <button class="pixel-btn" id="closeAchBtn" style="font-size:0.7rem; padding:10px 28px; margin-top:15px;">✨ Закрыть</button>
+            </div>
+        `;
+        document.body.appendChild(modalAch);
+
+        document.getElementById('closeAchBtn').addEventListener('click', function() {
+            modalAch.remove();
+        });
+
+        modalAch.addEventListener('click', function(e) {
+            if (e.target === modalAch) {
+                modalAch.remove();
             }
         });
     }
 
     function downloadPDF() {
-        // ЗАМЕНИТЕ НА РЕАЛЬНУЮ ССЫЛКУ НА PDF
         alert('📄 Здесь будет скачивание PDF-файла. Положите файл pamyatka.pdf в папку с сайтом.');
     }
 
     finalBtn.addEventListener('click', function() {
         playZoneSound('fanfary.mp3');
-        modalTitle.textContent = '🎉 Всё готово!';
+        modalTitle.textContent = '🎉 Ну что, детективы, вы справились!';
         modalContent.innerHTML = `
-            <p>Итак, я всё проверил: 15 июня в 17:00 в ресторане «Старый маяк».<br><br>
-            Карту посмотрел, памятку скачал, ключи взял.<br><br>
-            Осталось только приехать и подарить им свою улыбку.<br><br>
-            ❤️ До встречи!</p>
+            <p>Все секреты раскрыты, все места найдены. Теперь вы знаете о нашем празднике почти всё.<br><br>
+            Подведём итоги:<br><br>
+            📅 [Дата]<br>
+            🏛️ [Название ЗАГСа]<br>
+            🍽️ [Название ресторана]<br><br>
+            Все детали — в памятке. Не забудьте её скачать, там всё подробно и удобно.<br><br>
+            📩 Пожалуйста, подтвердите своё участие до [Дата], чтобы мы никого не потеряли в процессе подготовки.<br>
+            И да, не забудьте про своих спутников 😉<br><br>
+            Ждём вас!</p>
             <button class="pixel-btn" id="creditsBtn" style="font-size:0.6rem;padding:8px 20px;margin-top:10px;">🎬 Посмотреть титры</button>
             <button class="pixel-btn" id="finalDownloadBtn" style="font-size:0.6rem;padding:8px 20px;margin-top:10px;">📥 Скачать памятку (PDF)</button>
         `;
@@ -1053,23 +1292,24 @@
     });
 
     // ==========================================
-    // 8. КНОПКА-КОНВЕРТ «✉️» (ТОЛЬКО В МЕНЮ)
+    // 9. КНОПКА-КОНВЕРТ «✉️»
     // ==========================================
     document.getElementById('laterBtn').addEventListener('click', function(e) {
         e.stopPropagation();
+        unlockAchievement('curious');
+        
         modalTitle.textContent = '✉️ Письмо с пометкой «вскрыть позже»';
         modalContent.innerHTML = `
             <p style="margin-bottom:20px;">📩 Вы нашли информационное письмо с пометкой «вскрыть позже».</p>
-            <p style="margin-bottom:20px;">Чтобы его открыть, мы приглашаем вас пройти наш небольшой квест.<br>
-            В нём всего 6 секретов — это займёт пару минут.</p>
+            <p style="margin-bottom:20px;">Внутри — памятка со всеми деталями нашего праздника.</p>
+            <p style="margin-bottom:20px;">Чтобы её открыть, мы приглашаем вас пройти наш небольшой квест.<br>
+            Обещаем, это ненадолго и даже весело!</p>
             <p style="margin-bottom:20px;">Если вы уже прошли или очень торопитесь — нажмите «Всё равно вскрыть».</p>
             <p style="margin-bottom:20px;">❤️</p>
             <button class="pixel-btn" id="closeLaterBtn" style="font-size:0.6rem;padding:8px 20px;margin-right:10px;">🎮 Пройти квест</button>
             <button class="pixel-btn" id="downloadLaterBtn" style="font-size:0.6rem;padding:8px 20px;">✉️ Всё равно вскрыть</button>
         `;
         modal.classList.add('show');
-
-        // Скрываем кнопку «Понял!»
         modalCloseBtn.style.display = 'none';
 
         document.getElementById('closeLaterBtn').addEventListener('click', function(e) {
@@ -1087,14 +1327,44 @@
     });
 
     // ==========================================
-    // 9. ЗАКРЫТИЕ МОДАЛКИ
+    // 10. КНОПКА-ФОТО «📸»
+    // ==========================================
+    document.getElementById('photoBtn').addEventListener('click', function(e) {
+        e.stopPropagation();
+        modalTitle.textContent = '📸 О, какая-то папка...';
+        modalContent.innerHTML = `
+            <p style="margin-bottom:20px;">Пока пустая. Интересно, зачем она?</p>
+            <p style="margin-bottom:20px;">Наверное, узнаю, когда пройду квест до конца.</p>
+            <button class="pixel-btn" id="photoLinkBtn" style="font-size:0.6rem;padding:8px 20px;">📸 Перейти в папку</button>
+        `;
+        modal.classList.add('show');
+        modalCloseBtn.style.display = 'none';
+
+        document.getElementById('photoLinkBtn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            alert('📸 Здесь будет ссылка на папку с фото.');
+            modal.classList.remove('show');
+            modalCloseBtn.style.display = 'block';
+        });
+    });
+
+    // ==========================================
+    // 11. КНОПКА АЧИВОК «🏆»
+    // ==========================================
+    document.getElementById('achievementsBtn').addEventListener('click', function(e) {
+        e.stopPropagation();
+        showAchievementsList();
+    });
+
+    // ==========================================
+    // 12. ЗАКРЫТИЕ МОДАЛКИ
     // ==========================================
     modalCloseBtn.addEventListener('click', () => modal.classList.remove('show'));
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') modal.classList.remove('show'); });
 
     // ==========================================
-    // 10. СБРОС ИГРЫ
+    // 13. СБРОС ИГРЫ
     // ==========================================
     function resetGame() {
         foundCount = 0;
