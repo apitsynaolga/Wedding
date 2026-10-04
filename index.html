@@ -58,7 +58,6 @@
             pointer-events: none;
         }
 
-        /* ===== ВЕРХНЯЯ ЧАСТЬ (Фокс) ===== */
         .menu-top {
             display: flex;
             justify-content: flex-start;
@@ -67,7 +66,6 @@
             height: 100%;
         }
 
-        /* ===== СРЕДНЯЯ ЧАСТЬ (Текст + кнопки) ===== */
         .menu-center {
             display: flex;
             flex-direction: column;
@@ -77,7 +75,6 @@
             height: 100%;
         }
 
-        /* ===== НИЖНЯЯ ЧАСТЬ (Тишка) ===== */
         .menu-bottom {
             display: flex;
             justify-content: flex-end;
@@ -86,7 +83,6 @@
             height: 100%;
         }
 
-        /* ===== КОТЫ ===== */
         .cat-item {
             display: flex;
             flex-direction: column;
@@ -136,7 +132,6 @@
             image-rendering: pixelated;
         }
 
-        /* ===== ОБЛАЧКО ===== */
         .cat-speech {
             position: absolute;
             background: #ecd1a4;
@@ -200,7 +195,6 @@
             opacity: 1;
         }
 
-        /* ===== ЛОГОТИП ===== */
         .pixel-logo {
             font-family: 'Press Start 2P', monospace;
             font-size: 3.2rem;
@@ -225,7 +219,6 @@
             margin-bottom: 15px;
         }
 
-        /* ===== КНОПКИ В МЕНЮ ===== */
         .menu-center .btn-group {
             display: flex;
             flex-wrap: wrap;
@@ -267,7 +260,6 @@
             transform: scale(0.9);
         }
 
-        /* ===== КНОПКИ ОБЩИЕ ===== */
         .pixel-btn {
             font-family: 'Press Start 2P', monospace;
             background: #cd7542;
@@ -293,7 +285,6 @@
             box-shadow: inset 4px 4px 0 #9b6250, inset -4px -4px 0 #ecd1a4;
         }
 
-        /* ===== КНОПКИ НА ИГРОВОМ ЭКРАНЕ ===== */
         .btn-exit-game {
             position: absolute;
             top: 16px;
@@ -360,7 +351,6 @@
             text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
         }
 
-        /* ===== ИГРОВОЙ ЭКРАН ===== */
         #gameScreen {
             position: absolute;
             inset: 0;
@@ -391,7 +381,6 @@
             pointer-events: none;
         }
 
-        /* ===== НЕВИДИМЫЕ ЗОНЫ ===== */
         .pixel-zone {
             position: absolute;
             cursor: zoom-in;
@@ -406,7 +395,6 @@
             box-shadow: inset 0 0 20px rgba(205, 89, 60, 0.05);
         }
 
-        /* ===== МОДАЛЬНОЕ ОКНО ===== */
         .pixel-modal {
             position: fixed;
             inset: 0;
@@ -457,6 +445,7 @@
             line-height: 1.8;
             color: #1a0f1f;
             margin-bottom: 20px;
+            margin-top: 20px;
             transform: scaleY(1.15);
             display: inline-block;
         }
@@ -465,6 +454,7 @@
             font-size: 0.7rem;
             padding: 10px 28px;
             min-width: auto;
+            margin-top: 10px;
         }
 
         .pixel-modal-box img {
@@ -474,7 +464,6 @@
             border: 2px solid #cd7542;
         }
 
-        /* ===== КНОПКИ-ЗНАЧКИ В МЕНЮ ===== */
         .btn-later {
             background: #543235;
             border: 3px solid #cd7542;
@@ -494,7 +483,6 @@
             transform: scale(0.9);
         }
 
-        /* ===== ФИНАЛЬНАЯ КНОПКА ===== */
         .btn-final {
             position: absolute;
             bottom: 80px;
@@ -522,20 +510,21 @@
             100% { transform: translateX(-50%) scale(1); }
         }
 
-        /* ===== СТИЛИ ДЛЯ ТИТРОВ ===== */
         .credits-text {
             font-size: 0.8rem;
-            line-height: 2;
+            line-height: 2.2;
             text-align: center;
             color: #1a0f1f;
             white-space: pre-line;
+            max-width: 100%;
+            word-wrap: break-word;
+            padding: 0 15px;
         }
 
         .credits-text .highlight {
             color: #cd593c;
         }
 
-        /* ===== ВСПЛЫВАШКА АЧИВОК (как в Steam) ===== */
         .achievement-popup {
             position: fixed;
             bottom: 20px;
@@ -583,7 +572,6 @@
             font-size: 0.65rem;
         }
 
-        /* ===== СПИСОК АЧИВОК ===== */
         .achievements-list {
             text-align: left;
             font-size: 0.65rem;
@@ -598,7 +586,6 @@
             color: #9b6250;
         }
 
-        /* ===== АДАПТАЦИЯ ===== */
         @media (max-width: 700px) {
             .pixel-logo { font-size: 2rem; }
             .pixel-logo small { font-size: 0.6rem; }
@@ -685,7 +672,6 @@
                 ♥ Свадебный<br>квест
                 <small>✦ найди все секреты ✦</small>
             </div>
-            <div class="pixel-sub">нажми на котов — они заговорят</div>
 
             <div class="btn-group">
                 <button class="pixel-btn" id="startGameBtn">▶ Начать</button>
@@ -757,7 +743,7 @@
     // ==========================================
     const roomImages = {
         day: 'room1.jpg',
-        night: 'room2.jpeg'
+        night: 'room2.jpg'
     };
 
     let currentTime = 'day';
@@ -780,7 +766,6 @@
         const newTime = currentTime === 'day' ? 'night' : 'day';
         setTimeOfDay(newTime);
 
-        // Ачивка «Ночной сторож»
         dayNightSwitches++;
         if (dayNightSwitches >= 5) {
             unlockAchievement('night_watch');
@@ -987,7 +972,6 @@
         if (achievements.includes(key)) return;
         achievements.push(key);
         
-        // Показываем всплывашку
         const popup = document.createElement('div');
         popup.className = 'achievement-popup';
         popup.innerHTML = `
@@ -1002,10 +986,8 @@
             setTimeout(() => popup.remove(), 500);
         }, 4000);
 
-        // Показываем кнопку ачивок
         document.getElementById('achievementsBtn').style.display = 'block';
 
-        // Проверяем «Геймер года»
         if (achievements.length === 9 && !achievements.includes('gamer')) {
             unlockAchievement('gamer');
         }
@@ -1051,7 +1033,6 @@
             const isMap = this.dataset.isMap === 'true';
             const isPortrait = this.dataset.isPortrait === 'true';
 
-            // Считаем клики для ачивок
             if (title.includes('Кружка')) {
                 mugClicks++;
                 if (mugClicks >= 3) unlockAchievement('coffee');
@@ -1201,7 +1182,6 @@
 
         document.getElementById('closeCreditsBtn').addEventListener('click', function() {
             creditsModal.remove();
-            // После закрытия титров — показываем список ачивок
             if (achievements.length > 0) {
                 showAchievementsList();
             }
@@ -1296,7 +1276,6 @@
     // ==========================================
     document.getElementById('laterBtn').addEventListener('click', function(e) {
         e.stopPropagation();
-        unlockAchievement('curious');
         
         modalTitle.textContent = '✉️ Письмо с пометкой «вскрыть позже»';
         modalContent.innerHTML = `
@@ -1320,6 +1299,7 @@
 
         document.getElementById('downloadLaterBtn').addEventListener('click', function(e) {
             e.stopPropagation();
+            unlockAchievement('curious');
             downloadPDF();
             modal.classList.remove('show');
             modalCloseBtn.style.display = 'block';
@@ -1338,13 +1318,11 @@
             <button class="pixel-btn" id="photoLinkBtn" style="font-size:0.6rem;padding:8px 20px;">📸 Перейти в папку</button>
         `;
         modal.classList.add('show');
-        modalCloseBtn.style.display = 'none';
+        modalCloseBtn.style.display = 'block';
 
         document.getElementById('photoLinkBtn').addEventListener('click', function(e) {
             e.stopPropagation();
             alert('📸 Здесь будет ссылка на папку с фото.');
-            modal.classList.remove('show');
-            modalCloseBtn.style.display = 'block';
         });
     });
 
